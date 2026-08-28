@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HALALWAYS - Learning & Earning</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f5f7fb;
+      color: #222;
+    }
+
+    header {
+      background: #6c2bd9;
+      color: white;
+      text-align: center;
+      padding: 30px 15px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 32px;
+    }
+
+    header p {
+      margin: 10px 0 0;
+      font-size: 17px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 25px auto;
+      padding: 0 15px;
+    }
+
+    .card {
+      background: white;
+      padding: 22px;
+      margin-bottom: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      color: #6c2bd9;
+      margin-top: 0;
+    }
+
+    .student {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .course {
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 18px;
+      margin-top: 15px;
+    }
+
+    .course h3 {
+      margin-top: 0;
+    }
+
+    button {
+      background: #6c2bd9;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #5420a8;
+    }
+
+    #message {
+      margin-top: 15px;
+      font-weight: bold;
+      color: green;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>🌍 HALALWAYS</h1>
+    <p>Learning & Earning Platform</p>
+    <p>Learn — Practice — Grow</p>
+  </header>
+
+  <div class="container">
+
+    <div class="card">
+      <h2>📚 Welcome to HALALWAYS</h2>
+      <p>
+        Yahan beginners step-by-step skills seekh sakte hain
+        aur apni learning journey start kar sakte hain.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>👩‍🎓 Student Login</h2>
+
+      <p class="student" id="studentName">Sayyed Muskan</p>
+      <p>📧 mussuqueen442@gmail.com</p>
+
+      <button onclick="continueLearning()">Login / Continue</button>
+
+      <p id="message"></p>
+    </div>
+
+    <div class="card">
+      <h2>📅 Available Courses</h2>
+
+      <div class="course">
+        <h3>💻 Web Development</h3>
+        <p>HTML, CSS aur JavaScript basics step-by-step seekhein.</p>
+        <button onclick="enrollCourse('Web Development')">
+          Enroll Now
+        </button>
+      </div>
+
+      <div class="course">
+        <h3>🎨 Graphic Design</h3>
+        <p>Creative designing ke basic skills practice karein.</p>
+        <button onclick="enrollCourse('Graphic Design')">
+          Enroll Now
+        </button>
+      </div>
+
+      <div id="enrollmentMessage"></div>
+    </div>
+
+  </div>
+
+  <footer>
+    © 2026 HALALWAYS | Learn • Practice • Grow
+  </footer>
+
+  <script>
+    function continueLearning() {
+      document.getElementById("message").textContent =
+        "Welcome back! Your learning journey is ready. ❤️";
+    }
+
+    function enrollCourse(courseName) {
+      document.getElementById("enrollmentMessage").textContent =
+        "✅ You are enrolled in " + courseName + "!";
+    }
+  </script>
+
+</body>
+</html>

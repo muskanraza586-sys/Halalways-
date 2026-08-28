@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<!-- HALALWAYS -->
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HALALWAYS - Learning & Earning</title>
+<style>body{margin:0;font-family:Arial;background:#f5f3ff;color:#222}
+header{background:#7065e7;color:white;text-align:center;padding:30px 15px}
+h1,h2{margin:10px}.container{max-width:900px;margin:auto;padding:20px}.card{background:white;padding:22px;margin:18px 0;border-radius:15px;box-shadow:0 3px 12px #ddd}input{box-sizing:border-box;width:90%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px}button{background:#7065e7;color:white;border:0;padding:12px 20px;padding:10px;border-radius:8px;font-size:16px}footer{text-align:center;background:#222;color:white;padding:20px;margin-top:30px}
+#dashboard{display:none}
+</style>
+</head>
+<body>
+<header><h1>🌍 HALALWAYS</h1><p>Learning & Earning Platform</p><p>Learn — Practice – Grow</p></header>
+<div class="container">
+<div class="card"><h2>📀# Welcome to HALALWAYS</h2><p>Yahan beginners step-by-step skills seekhte saakte hain aar ipni learning journey start karon.</p></div>
+<div class="card"><h2>👅 Student Login</h2><input id="name" placeholder="Enter your name"><input id="email" placeholder="Enter your email" type="email"><br><button onclick="login()">Login / Continue</button> <button onclick="adminLogin()">🔐 Admin Login</button></div>
+<div class="card"><h2>📅 Available Courses</h2><p><b>D🐀 Web Development</b> - HTML, CSS aur JavaScript basics.</p><button onclick="enroll('Web Development')">Enroll Now</button><p><b>💪 Graphic Design</b> - Designing ke basic concepts.</p><button onclick="enroll('Graphic Design')">Enroll Now</button><p><b>⟖  Content Writing</b> - Content writing ki basic skills.</p><button onclick="enroll('Content Writing')">Enroll Now</button>
+<p><b>💼 Freelancing</b> - Freelancing ki basic skills aur client work.</p>
+<button onclick="enroll('Freelancing')">Enroll Now</button>
+<p><b>📱 Digital Marketing</b> - Digital marketing aur online promotion ki basic skills.</p>
+<button onclick="enroll('Digital Marketing')">Enroll Now</button></div>
+<div class="card" id="dashboard" style="display:none" style="display:none"><h2>📉 My Dashboard</h2><p>Welcome, <b id="studentName"></b> 👋</p><p>📧 Email: <b id="studentEmail">-</b></p><p>Enrolled Course: <b id="myCourse">Not enrolled</b></p><p>📈 Learning Status: <b id="learningStatus">Ready to Learn</b></p><button onclick="continueLearning()">🎓 Continue Learning</button> <button onclick="logoutUser()">🚪 Logout</button></div>
+</div>
+
+<div class="card" id="adminDashboard" style="display:none">
+<h2>🛠️ Admin Dashboard</h2>
+<p>Welcome, <b>Muskan</b> 👋</p>
+<hr>
+<h3>📊 Platform Overview</h3>
+<p>👥 Total Students: <b id="totalStudents">0</b></p>
+<p>📚 Courses Available: <b>7</b></p>
+<p>✅ Student Progress: <b>Coming Soon</b></p>
+<button onclick="location.reload()">🚪 Admin Logout</button>
+</div>
+<footer><p>© 2026 HALALWAYS<br>Learning & Earning</p></footer>
+<script>function login(){var n = document.getElementById("name").value; var e = document.getElementById("email").value; if(!n || !e){alert("Please enter your name and email.");return;}document.getElementById("studentName").innerText=n;document.getElementById("name").setAttribute("readonly","true");document.getElementById("dashboard").style.display="block";}function enroll(c){var n=document.getElementById("name").value;if(!n){alert("Please login first.");return;}document.getElementById("myCourse").innerText=c;}function logoutUser() {
+  localStorage.clear();
+  sessionStorage.clear();
+  location.reload();
+}
+</script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+const firebaseConfig={apiKey:"AIzaSyBCyhj7Xt2NbHGR201361KqgdpvjIIZPtg",authDomain:"halalways-cd62b.firebaseapp.com",projectId:"halalways-cd62b",storageBucket:"halalways-cd62b.firebasestorage.app",messagingSenderId:"60663724878",appId:"1:60663724878:web:4a17d96f0eb872ccc7bc1f",measurementId:"G-SVPSD24VGX"};
+const app=initializeApp(firebaseConfig); const auth=getAuth(app);
+window.login=async function(){const email=document.getElementById("email")?.value.trim();const name=document.getElementById("name")?.value.trim();if(!name||!email){alert("Please enter your name and email.");return;}const password=prompt("Enter your password");if(!password)return;try{const result=await signInWithEmailAndPassword(auth,email,password); document.getElementById("studentEmail").innerText=result.user.email || email;document.getElementById("studentName")&&(document.getElementById("studentName").innerText=name);document.getElementById("dashboard")&&(document.getElementById("dashboard").style.display="block");alert("Login successful!");}catch(e){alert("Login failed: "+e.message);}};
+
+window.adminLogin = async function(){
+  const email = prompt("Enter Admin Email");
+  if(email !== "muskanraza586@gmail.com"){
+    alert("❌ Access Denied. Admin account required.");
+    return;
+  }
+
+  const password = prompt("Enter Admin Password");
+  if(!password) return;
+
+  try{
+    await signInWithEmailAndPassword(auth,email,password);
+    document.getElementById("adminDashboard").style.display="block";
+    document.getElementById("dashboard").style.display="none";
+    alert("✅ Admin Login Successful!");
+  }catch(e){
+    alert("❌ Admin Login Failed: " + e.message);
+  }
+};
+</script></body>
+</html>
+<script>
+function continueLearning() {
+  const course = document.getElementById('myCourse')?.innerText || 'Not enrolled';
+  const dashboard = document.getElementById('dashboard');
+
+  let lessons = [];
+
+  if (course.includes('Graphic')) {
+    lessons = [
+      "Lesson 1 - Introduction to Graphic Design",
+      "Lesson 2 - Colors & Typography",
+      "Lesson 3 - Canva Basics",
+      "Lesson 4 - Social Media Post Design",
+      "Lesson 5 - Your First Design Project"
+    ];
+  } else if (course.includes('Web')) {
+    lessons = [
+      "Lesson 1 - HTML Basics",
+      "Lesson 2 - CSS Basics",
+      "Lesson 3 - JavaScript Basics",
+      "Lesson 4 - Build Your First Web Page",
+      "Lesson 5 - Your First Website Project"
+    ];
+  } else if (course.includes('Content')) {
+    lessons = [
+      "Lesson 1 - Content Writing Basics",
+      "Lesson 2 - Writing Captions",
+      "Lesson 3 - Hooks & Headlines",
+      "Lesson 4 - Social Media Content",
+      "Lesson 5 - Your First Content Project"
+    ];
+  } else if (course.includes('Freelancing')) {
+    lessons = [
+      "Lesson 1 - Introduction to Freelancing",
+      "Lesson 2 - Freelancing Skills",
+      "Lesson 3 - Finding Clients",
+      "Lesson 4 - Freelancing Profile & Portfolio",
+      "Lesson 5 - Your First Freelancing Project"
+    ];
+  } else if (course.includes('Digital Marketing')) {
+    lessons = [
+      "Lesson 1 - Introduction to Digital Marketing",
+      "Lesson 2 - Target Audience & Marketing Basics",
+      "Lesson 3 - Social Media Marketing",
+      "Lesson 4 - Content & Promotion",
+      "Lesson 5 - Your First Digital Marketing Project"
+    ];
+  } else {
+    lessons = ["Please enroll in a course to start learning."];
+  }
+
+  dashboard.innerHTML = `
+    <h2>${course} Course</h2>
+    <p>Welcome to your learning journey! ❤️</p>
+    <h3>✨Your Lessons</h3>
+    ${lessons.map((lesson, i) => `
+      <div class="card">
+        <b>${lesson}</b><br><br>
+        <button onclick="startLesson(${i + 1}, '${course}')">
+          Start Lesson
+        </button>
+      </div>
+    `).join("")}
+    <br>
+    <button onclick="location.reload()">⬅️Back to Dashboard</button>
+  `;
+}
+</script>
+
+
+<script>
+function startLesson(number, course) {
+  const dashboard = document.getElementById("dashboard");
+
+  const lessons = {
+    1: {
+    title: 'Introduction to Graphic Design',
+    content: `
+      <h2>📖 Lesson 1: Introduction to Graphic Design</h2>
+
+      <h3>🎨 Graphic Design kya hota hai?</h3>
+      <p>Graphic Design ka matlab text, colors, images aur shapes ko creatively use karke ek attractive aur meaningful visual banana hai.</p>
+
+      <p>Simple words mein, kisi message ya information ko beautiful visual ke through present karna Graphic Design kehlata hai.</p>
+
+      <h3>📱 Graphic Design kahan use hota hai?</h3>
+      <ul>
+        <li>Instagram posts aur reels covers</li>
+        <li>Posters aur banners</li>
+        <li>Logos aur brand designs</li>
+        <li>YouTube thumbnails</li>
+        <li>Advertisements</li>
+        <li>Business cards aur social media graphics</li>
+      </ul>
+
+      <h3>🧩 Graphic Design ke important elements</h3>
+
+      <p><b>1. Text:</b> Clear aur readable message ke liye suitable fonts aur headings ka use kiya jata hai.</p>
+
+      <p><b>2. Colors:</b> Sahi colors design ko attractive aur professional banate hain.</p>
+
+      <p><b>3. Images:</b> Relevant aur clear images design ko visually interesting banati hain.</p>
+
+      <p><b>4. Shapes:</b> Lines, circles, boxes aur other shapes information ko organize karne mein help karte hain.</p>
+
+      <h3>💡 Good Design ki basic qualities</h3>
+      <ul>
+        <li>Design clean aur simple hona chahiye.</li>
+        <li>Text easily readable hona chahiye.</li>
+        <li>Colors properly match hone chahiye.</li>
+        <li>Images clear aur relevant honi chahiye.</li>
+        <li>Important information easily visible honi chahiye.</li>
+      </ul>
+
+      <h3>🌟 Real Example</h3>
+      <p>Agar tum ek Instagram work-from-home poster bana rahi ho, to usme clear heading, suitable image, readable text, proper colors aur clear call-to-action hona chahiye.</p>
+
+      <h3>🎯 Practice Task</h3>
+      <p>Canva par ek simple motivational Instagram post create karo.</p>
+      <ul>
+        <li>Ek short motivational heading add karo.</li>
+        <li>2–3 suitable colors use karo.</li>
+        <li>Ek relevant image ya graphic add karo.</li>
+        <li>Text ko properly align karo.</li>
+        <li>Design ko clean aur simple rakho.</li>
+      </ul>
+
+      <p><b>✅ Practice complete karne ke baad “Mark as Complete” par click karo.</b></p>
+      <p>Next lesson mein hum <b>Colors & Typography</b> ke baare mein seekhenge. 🚀</p>
+    `
+  },
+2: {
+    title: 'Colors & Typography',
+    content: `
+      <h2>🎨 Lesson 2: Colors & Typography</h2>
+
+      <h3>🌈 Colors kya hote hain?</h3>
+      <p>Colors Graphic Design ka ek important part hain. Sahi colors design ko attractive, clear aur professional banate hain.</p>
+
+      <h3>🎯 Colors ka purpose</h3>
+      <ul>
+        <li>Attention attract karna</li>
+        <li>Design ka mood set karna</li>
+        <li>Brand ko professional look dena</li>
+        <li>Important information ko highlight karna</li>
+      </ul>
+
+      <h3>🎨 Basic Color Types</h3>
+      <p><b>Primary Colors:</b> Red, Yellow aur Blue ko basic primary colors maana jata hai.</p>
+      <p><b>Secondary Colors:</b> Do primary colors ko mix karne se secondary colors bante hain.</p>
+      <p><b>Warm Colors:</b> Red, Orange aur Yellow jaise colors energetic feel dete hain.</p>
+      <p><b>Cool Colors:</b> Blue, Green aur Purple jaise colors calm aur peaceful feel de sakte hain.</p>
+
+      <h3>🔤 Typography kya hoti hai?</h3>
+      <p>Typography ka matlab text ko aise arrange aur style karna hai ki woh readable, attractive aur design ke according suitable lage.</p>
+
+      <h3>✍️ Fonts choose karte waqt kya dekhein?</h3>
+      <ul>
+        <li>Font easily readable ho.</li>
+        <li>Heading aur normal text mein clear difference ho.</li>
+        <li>Bahut zyada different fonts ek saath use na karein.</li>
+        <li>Font design ke purpose ke according ho.</li>
+      </ul>
+
+      <h3>💡 Color & Font Combination Tips</h3>
+      <ul>
+        <li>Background aur text mein proper contrast rakho.</li>
+        <li>Important words ko highlight karo.</li>
+        <li>2–3 main colors ka use beginner ke liye enough hai.</li>
+        <li>Readable fonts ko priority do.</li>
+        <li>Design ko clean aur balanced rakho.</li>
+      </ul>
+
+      <h3>🌟 Real Example</h3>
+      <p>Agar tum ek motivational Instagram post bana rahi ho, to dark background ke saath light readable text use kar sakti ho. Heading ko thoda bold rakhkar important message ko highlight kar sakti ho.</p>
+
+      <h3>🎯 Practice Task</h3>
+      <p>Canva par ek simple quote ya motivational post create karo.</p>
+      <ul>
+        <li>2–3 matching colors choose karo.</li>
+        <li>Ek readable heading font use karo.</li>
+        <li>Normal text ke liye simple font choose karo.</li>
+        <li>Background aur text mein good contrast rakho.</li>
+        <li>Design ko clean aur balanced rakho.</li>
+      </ul>
+
+      <p><b>✅ Practice complete karne ke baad “Mark as Complete” par click karo.</b></p>
+      <p>Next lesson mein hum <b>Canva Basics</b> seekhenge. 🚀</p>
+    `
+  },
+3: {
+    title: 'Canva Basics',
+    content: `
+      <h2>🎨 Lesson 3: Canva Basics</h2>
+
+      <h3>🖥️ Canva kya hai?</h3>
+      <p>Canva ek easy-to-use online design tool hai jiska use beginners bhi professional-looking designs banane ke liye kar sakte hain.</p>
+
+      <h3>📱 Canva ka use kahan hota hai?</h3>
+      <ul>
+        <li>Instagram posts aur stories</li>
+        <li>Reels covers aur thumbnails</li>
+        <li>Posters aur flyers</li>
+        <li>Presentations</li>
+        <li>Business banners</li>
+        <li>Social media graphics</li>
+      </ul>
+
+      <h3>🚀 Canva par kaam kaise start karein?</h3>
+      <ol>
+        <li>Canva open karo.</li>
+        <li>Apne account se login karo.</li>
+        <li>Search bar mein apne design ka type search karo.</li>
+        <li>Blank design ya suitable template choose karo.</li>
+        <li>Apne according text, colors aur images edit karo.</li>
+      </ol>
+
+      <h3>🧰 Canva ke Important Tools</h3>
+      <p><b>Templates:</b> Ready-made designs ko quickly customize karne ke liye.</p>
+      <p><b>Elements:</b> Shapes, icons, lines, stickers aur graphics add karne ke liye.</p>
+      <p><b>Text:</b> Heading, subheading aur normal text add karne ke liye.</p>
+      <p><b>Uploads:</b> Apni photos aur videos upload karne ke liye.</p>
+      <p><b>Background:</b> Design ka background change karne ke liye.</p>
+
+      <h3>✏️ Design ko Edit kaise karein?</h3>
+      <ul>
+        <li>Text par tap karke wording change karo.</li>
+        <li>Font aur font size ko adjust karo.</li>
+        <li>Elements ko drag karke correct position par rakho.</li>
+        <li>Colors ko apne design ke according change karo.</li>
+        <li>Images ko replace ya upload karo.</li>
+      </ul>
+
+      <h3>💡 Beginner Tips</h3>
+      <ul>
+        <li>Design ko simple aur clean rakho.</li>
+        <li>Bahut zyada elements ek saath use mat karo.</li>
+        <li>Text readable rakho.</li>
+        <li>Same design mein proper spacing maintain karo.</li>
+        <li>Template ko copy karne ke bajaye apne style ke according customize karo.</li>
+      </ul>
+
+      <h3>🌟 Real Example</h3>
+      <p>Agar tum ek Instagram motivational post banana chahti ho, Canva mein Instagram Post template choose karo. Ek attractive background select karo, motivational quote add karo, readable font use karo aur 2–3 matching colors ke saath design complete karo.</p>
+
+      <h3>🎯 Practice Task</h3>
+      <p>Canva par ek simple Instagram motivational post create karo.</p>
+      <ul>
+        <li>Ek suitable template ya blank design choose karo.</li>
+        <li>Apna motivational quote add karo.</li>
+        <li>Readable font use karo.</li>
+        <li>2–3 matching colors use karo.</li>
+        <li>Ek suitable element ya image add karo.</li>
+        <li>Design ko clean aur balanced rakho.</li>
+      </ul>
+
+      <p><b>✅ Practice complete karne ke baad “Mark as Complete” par click karo.</b></p>
+      <p>Next lesson mein hum <b>Layout & Composition</b> seekhenge. 🚀</p>
+    `
+  },
+4: {
+    title: 'Layout & Composition',
+    content: `
+      <h2>📐 Lesson 4: Layout & Composition</h2>
+
+      <h3>🧩 Layout kya hota hai?</h3>
+      <p>Layout ka matlab design ke andar text, images, shapes aur other elements ko ek proper position par arrange karna hai. Achha layout design ko clean, attractive aur easy to understand banata hai.</p>
+
+      <h3>🎯 Composition kya hoti hai?</h3>
+      <p>Composition ka matlab design ke different elements ko balance aur harmony ke saath arrange karna hai, taaki viewer ki nazar naturally important information par jaye.</p>
+
+      <h3>⚖️ Balance</h3>
+      <p>Design mein elements ka visual weight balanced hona chahiye. Ek side bahut heavy aur doosri side completely empty ho to design unbalanced lag sakta hai.</p>
+
+      <h3>📏 Alignment</h3>
+      <p>Text aur elements ko proper alignment mein rakhne se design organized aur professional dikhta hai. Headings, paragraphs aur images ko randomly place karne se bachna chahiye.</p>
+
+      <h3>↔️ Spacing</h3>
+      <p>Elements ke beech proper space rakhna important hai. Jab design mein breathing space hoti hai, to information read karna easy hota hai.</p>
+
+      <h3>⭐ Hierarchy</h3>
+      <p>Visual hierarchy ka matlab important information ko sabse pehle noticeable banana hai.</p>
+      <ul>
+        <li>Main heading ko bigger ya bold rakho.</li>
+        <li>Subheading ko heading se thoda smaller rakho.</li>
+        <li>Normal information ko simple aur readable rakho.</li>
+        <li>Important words ko highlight kar sakte ho.</li>
+      </ul>
+
+      <h3>🔲 Grid ka basic idea</h3>
+      <p>Grid ek invisible structure hota hai jo design elements ko properly align karne mein help karta hai. Beginners ke liye grid ka use design ko neat aur organized rakhne mein helpful hota hai.</p>
+
+      <h3>💡 Common Layout Mistakes</h3>
+      <ul>
+        <li>Bahut saare elements ek hi jagah add karna.</li>
+        <li>Text ko edges ke bahut close rakhna.</li>
+        <li>Different elements ko randomly align karna.</li>
+        <li>Spacing ko ignore karna.</li>
+        <li>Important information ko highlight na karna.</li>
+      </ul>
+
+      <h3>🌟 Real Example</h3>
+      <p>Agar tum ek Instagram motivational post bana rahi ho, to sabse pehle main quote ko center ya suitable position par place karo. Uske baad supporting text ya image add karo. Proper spacing aur alignment ke saath design ko balanced rakho.</p>
+
+      <h3>🎯 Practice Task</h3>
+      <p>Canva par ek simple promotional ya motivational post create karo.</p>
+      <ul>
+        <li>Ek clear main heading add karo.</li>
+        <li>Heading aur normal text mein hierarchy rakho.</li>
+        <li>Elements ko properly align karo.</li>
+        <li>Text aur elements ke beech proper spacing rakho.</li>
+        <li>Design ko balanced aur clean rakho.</li>
+      </ul>
+
+      <p><b>✅ Practice complete karne ke baad “Mark as Complete” par click karo.</b></p>
+      <p>Next lesson mein hum <b>Basic Design Principles</b> seekhenge. 🚀</p>
+    `
+  },
+5: {
+    title: "Basic Design Principles",
+    content: `
+      <h2>🎨 Lesson 5: Basic Design Principles</h2>
+
+      <h3>📚 Design Principles kya hote hain?</h3>
+      <p>Design principles basic rules hain jo kisi design ko balanced, attractive, clear aur professional banane mein help karte hain.</p>
+
+      <h3>⚖️ Balance</h3>
+      <p>Design ke elements ka visual weight properly distribute hona chahiye.</p>
+
+      <h3>⭐ Contrast</h3>
+      <p>Contrast important information ko noticeable banata hai, jaise dark background par light text.</p>
+
+      <h3>🔁 Repetition</h3>
+      <p>Same colors, fonts, shapes ya styles ko consistently repeat karne se design professional lagta hai.</p>
+
+      <h3>📏 Alignment</h3>
+      <p>Text aur elements ko proper alignment mein rakhne se design clean aur organized dikhta hai.</p>
+
+      <h3>↔️ Proximity</h3>
+      <p>Related information ko ek doosre ke paas rakhne se viewer ko information samajhne mein aasani hoti hai.</p>
+
+      <h3>🌬️ White Space</h3>
+      <p>Empty space design ko crowded hone se bachata hai aur content ko breathing room deta hai.</p>
+
+      <h3>🎯 Visual Hierarchy</h3>
+      <p>Visual hierarchy decide karti hai ki viewer design mein sabse pehle kya dekhega. Main heading ko prominent rakho.</p>
+
+      <h3>💡 Professional Design Tips</h3>
+      <ul>
+        <li>Limited colors use karo.</li>
+        <li>Readable fonts choose karo.</li>
+        <li>Proper spacing maintain karo.</li>
+        <li>Elements ko randomly place mat karo.</li>
+        <li>Design ko unnecessary elements se overload mat karo.</li>
+        <li>Main message ko clear rakho.</li>
+      </ul>
+
+      <h3>🌟 Real Example</h3>
+      <p>Agar tum Instagram sale post bana rahi ho, product image clearly visible rakho, offer ko bold rakho aur brand colors consistently use karo.</p>
+
+      <h3>🎯 Practice Task</h3>
+      <p>Canva par ek simple promotional ya motivational post create karo.</p>
+      <ul>
+        <li>Balance maintain karo.</li>
+        <li>Good contrast use karo.</li>
+        <li>Colors aur fonts consistently use karo.</li>
+        <li>Text aur elements ko align karo.</li>
+        <li>Proper white space rakho.</li>
+        <li>Main message ko prominent banao.</li>
+      </ul>
+
+      <p><b>✅ Practice complete karne ke baad "Mark as Complete" par click karo.</b></p>
+    `
+  }
+  };
+
+    
+const webLessons = {
+  1: {
+    title: "HTML Basics",
+    content: `
+      <h2>📘 Lesson 1: HTML Basics</h2>
+      <p>HTML website ka basic structure banane ke liye use hoti hai.</p>
+      <h3>📌 Important HTML Tags</h3>
+      <ul>
+        <li>Headings</li>
+        <li>Paragraphs</li>
+        <li>Links</li>
+        <li>Images</li>
+        <li>Buttons</li>
+        <li>Lists</li>
+      </ul>
+      <h3>🎯 Practice Task</h3>
+      <p>Ek simple HTML page banao jisme heading, paragraph, image aur button ho.</p>
+      <p><b>✅ Practice complete karne ke baad "Mark as Complete" par click karo.</b></p>
+    `
+  },
+  2: {
+    title: "CSS Basics",
+    content: `
+      <h2>🎨 Lesson 2: CSS Basics</h2>
+      <p>CSS website ke colors, fonts, spacing aur layout ko style karta hai.</p>
+      <h3>🎯 Practice Task</h3>
+      <p>Apne HTML page mein background color, text color, font size aur button styling add karo.</p>
+      <p><b>✅ Practice complete karne ke baad "Mark as Complete" par click karo.</b></p>
+    `
+  },
+  3: {
+    title: "JavaScript Basics",
+    content: `
+      <h2>⚡ Lesson 3: JavaScript Basics</h2>
+      <p>JavaScript website ko interactive aur dynamic banata hai.</p>
+      <h3>🎯 Practice Task</h3>
+      <p>Ek button banao jo click karne par simple message show kare.</p>
+      <p><b>✅ Practice complete karne ke baad "Mark as Complete" par click karo.</b></p>
+    `
+  },
+  4: {
+    title: "Build Your First Web Page",
+    content: `
+      <h2>📄 Lesson 4: Build Your First Web Page</h2>
+      <p>HTML aur CSS ko combine karke ek simple web page banao.</p>
+      <h3>🎯 Practice Task</h3>
+      <p>Heading, paragraph, image aur styled button wala page create karo.</p>
+      <p><b>✅ Practice complete karne ke baad "Mark as Complete" par click karo.</b></p>
+    `
+  },
+  5: {
+    title: "Your First Website Project",
+    content: `
+      <h2>🚀 Lesson 5: Your First Website Project</h2>
+      <p>HTML, CSS aur JavaScript ko combine karke apna first simple website project banao.</p>
+      <h3>🎯 Practice Task</h3>
+      <p>Ek simple personal, business ya learning website create karo.</p>
+      <p><b>✅ Practice complete karne ke baad "Mark as Complete" par click karo.</b></p>
+    `
+  }
+};
+
+
+const contentWritingLessons = {
+  1: {
+    title: "Content Writing Basics",
+    content: `
+      <h2>✍️ Lesson 1: Content Writing Basics</h2>
+      <p>Content Writing ka matlab words ka use karke useful aur engaging content likhna hai.</p>
+      <h3>📌 Content Writing kahan use hoti hai?</h3>
+      <ul>
+        <li>Instagram aur Facebook Posts</li>
+        <li>Blogs aur Articles</li>
+        <li>Websites</li>
+        <li>Advertisements</li>
+        <li>Reels Captions aur Scripts</li>
+      </ul>
+      <h3>🎯 Practice Task</h3>
+      <p>Ek motivational Instagram post ke liye 5-6 lines ka content likho.</p>
+      <p><b>✅ Practice complete karne ke baad "Mark as Complete" par click karo.</b></p>
+    `
+  },
+  2: {
+    title: "Writing Captions",
+    content: `
+      <h2>✍️ Lesson 2: Writing Captions</h2>
+      <p>Caption post ya reel ke saath likha gaya text hota hai jo audience ka attention attract karta hai.</p>
+      <h3>📌 Good Caption ke Elements</h3>
+      <ul>
+        <li>Strong opening line</li>
+        <li>Simple aur clear language</li>
+        <li>Useful information</li>
+        <li>Call to Action (CTA)</li>
+      </ul>
+      <h3>🎯 Practice Task</h3>
+      <p>Ek motivational Instagram post ke liye 3-4 lines ki caption likho.</p>
+      <p><b>✅ Practice complete karne ke baad "Mark as Complete" par click karo.</b></p>
+    `
+  },
+  3: {
+    title: "Hooks & Headlines",
+    content: `
+      <h2>🔥 Lesson 3: Hooks & Headlines</h2>
+      <p>Hook content ki first line hoti hai jo audience ka attention attract karti hai.</p>
+      <h3>🎯 Strong Hook kaise likhein?</h3>
+      <ul>
+        <li>Question se start karo.</li>
+        <li>Interesting fact use karo.</li>
+        <li>Audience ki problem mention karo.</li>
+        <li>Curiosity create karo.</li>
+      </ul>
+      <h3>💡 Examples</h3>
+      <p><b>"Kya aap bhi ghar se kuch naya seekhna chahte ho?"</b></p>
+      <p><b>"Ye 3 mistakes aapke content ko weak bana sakti hain."</b></p>
+      <h3>🎯 Practice Task</h3>
+      <p>Apne kisi topic par 5 different hooks likho.</p>
+      <p><b>✅ Practice complete karne ke baad "Mark as Complete" par click karo.</b></p>
+    `
+  },
+  4: {
+    title: "Social Media Content",
+    content: `
+      <h2>📱 Lesson 4: Social Media Content</h2>
+      <p>Social media content mein posts, captions, reels scripts, stories aur promotional content shamil hote hain.</p>
+      <h3>📌 Content Types</h3>
+      <ul>
+        <li>Educational Content</li>
+        <li>Motivational Content</li>
+        <li>Promotional Content</li>
+        <li>Engagement Content</li>
+      </ul>
+      <h3>🎯 Practice Task</h3>
+      <p>Ek social media post likho jisme Hook, Main Message aur CTA ho.</p>
+      <p><b>✅ Practice complete karne ke baad "Mark as Complete" par click karo.</b></p>
+    `
+  },
+  5: {
+    title: "Your First Content Project",
+    content: `
+      <h2>🎉 Lesson 5: Your First Content Project</h2>
+      <p>Ab tak tumne Content Writing ke basics, captions, hooks aur social media content ke baare mein seekha.</p>
+      <h3>🎯 Your Project</h3>
+      <p>Ek complete Instagram post create karo.</p>
+      <ul>
+        <li>Ek strong hook likho.</li>
+        <li>4-5 lines ka main content likho.</li>
+        <li>Ek attractive caption likho.</li>
+        <li>End mein CTA add karo.</li>
+      </ul>
+      <p><b>Example CTA:</b> Agar aapko ye information useful lagi ho to follow karein aur share karein. ❤️</p>
+      <p><b>✅ Practice complete karne ke baad "Mark as Complete" par click karo.</b></p>
+    `
+  }
+};
+
+
+const freelancingLessons = {
+  1: {
+    title: "Introduction to Freelancing",
+    content: `
+      <h2>💼 Lesson 1: Introduction to Freelancing</h2>
+      <p>Freelancing ka matlab kisi company mein permanently job karne ke bajaye apni skills ke through different clients ke liye projects par kaam karna hai.</p>
+
+      <h3>📌 Freelancing mein kya kaam kar sakte hain?</h3>
+      <ul>
+        <li>🎨 Graphic Design</li>
+        <li>✍️ Content Writing</li>
+        <li>🎬 Video Editing</li>
+        <li>💻 Web Development</li>
+        <li>📱 Social Media Management</li>
+      </ul>
+
+      <h3>🎯 Practice Task</h3>
+      <p>Apni 2-3 skills identify karo jo tum freelancing mein use kar sakte ho.</p>
+      <p><b>✅ Practice complete karne ke baad "Mark as Complete" par click karo.</b></p>
+    `
+  },
+
+  2: {
+    title: "Finding Freelance Work",
+    content: `
+      <h2>🔍 Lesson 2: Finding Freelance Work</h2>
+      <p>Freelancing start karne ke liye clients aur projects find karna important hai.</p>
+
+      <h3>📌 Work kahan find kar sakte hain?</h3>
+      <ul>
+        <li>Freelancing platforms</li>
+        <li>Social media</li>
+        <li>Professional networking</li>
+        <li>Direct client outreach</li>
+        <li>Referrals</li>
+      </ul>
+
+      <h3>💡 Important Tip</h3>
+      <p>Client ko contact karte waqt apni skill, experience aur portfolio ko clearly explain karo.</p>
+
+      <h3>🎯 Practice Task</h3>
+      <p>Apni skill ke according 3 potential clients ya project types ki list banao.</p>
+      <p><b>✅ Practice complete karne ke baad "Mark as Complete" par click karo.</b></p>
+    `
+  },
+
+  3: {
+    title: "Profile & Portfolio",
+    content: `
+      <h2>📝 Lesson 3: Creating Your Profile & Portfolio</h2>
+      <p>Freelancing profile tumhari professional identity hoti hai, aur portfolio tumhare previous work ko show karta hai.</p>
+
+      <h3>📌 Profile mein kya hona chahiye?</h3>
+      <ul>
+        <li>Professional introduction</li>
+        <li>Skills</li>
+        <li>Services</li>
+        <li>Work samples</li>
+        <li>Clear profile description</li>
+      </ul>
+
+      <h3>💡 Portfolio kyun important hai?</h3>
+      <p>Portfolio client ko tumhari skills aur work quality samajhne mein help karta hai.</p>
+
+      <h3>🎯 Practice Task</h3>
+      <p>Apni skill ke 2-3 sample works collect karke ek simple portfolio ready karo.</p>
+      <p><b>✅ Practice complete karne ke baad "Mark as Complete" par click karo.</b></p>
+    `
+  },
+
+  4: {
+    title: "Client Communication & Projects",
+    content: `
+      <h2>🤝 Lesson 4: Client Communication & Getting Projects</h2>
+      <p>Freelancing mein professional communication client ke saath trust build karne ke liye bahut important hai.</p>
+
+      <h3>📌 Client se baat karte waqt</h3>
+      <ul>
+        <li>Respectful aur professional language use karo.</li>
+        <li>Client ki requirement carefully samjho.</li>
+        <li>Deadline clearly discuss karo.</li>
+        <li>Project details pehle confirm karo.</li>
+        <li>Jo promise karo use time par complete karo.</li>
+      </ul>
+
+      <h3>🎯 Practice Task</h3>
+      <p>Ek imaginary client ko professional introduction message likho jisme apni skill aur service explain karo.</p>
+      <p><b>✅ Practice complete karne ke baad "Mark as Complete" par click karo.</b></p>
+    `
+  },
+
+  5: {
+    title: "Your First Freelancing Project",
+    content: `
+      <h2>🚀 Lesson 5: Your First Freelancing Project</h2>
+      <p>Ab tumne freelancing ke basics, work finding, profile, portfolio aur client communication ke baare mein seekha.</p>
+
+      <h3>🎯 Your First Project</h3>
+      <p>Apni skill choose karo aur ek sample freelance project complete karo.</p>
+
+      <ul>
+        <li>Apni service choose karo.</li>
+        <li>Client requirement imagine ya define karo.</li>
+        <li>Project complete karo.</li>
+        <li>Final work ko portfolio mein save karo.</li>
+      </ul>
+
+      <p><b>💡 Tip:</b> Starting mein quality work aur learning par focus karo. Experience ke saath confidence aur opportunities dono improve hote hain.</p>
+
+      <p><b>✅ Practice complete karne ke baad "Mark as Complete" par click karo.</b></p>
+    `
+  }
+};
+
+
+const digitalMarketingLessons={
+1:{title:"Introduction to Digital Marketing",content:`<h2>📱Lesson 1: Introduction to Digital Marketing</h2><p>Digital Marketing ka matlab internet aur digital platforms ka use karke kisi product, service ya brand ko promote karna hai.</p><h3>📌Digital Marketing kahan use hoti hai?</h3><ul><li>Social Media</li><li>Websites</li><li>Search Engines</li><li>Email Marketing</li><li>Online Advertising</li></ul><h3>🎯Practice Task</h3><p>Kisi ek product ya service ko choose karo aur socho ki tum use online kaise promote karoge.</p><p><b>✅Practice complete karne ke baad "Mark as Complete" par click karo.</b></p>`},
+2:{title:"Target Audience & Marketing Basics",content:`<h2>🎯Lesson 2: Target Audience & Marketing Basics</h2><p>Target Audience un logon ka group hota hai jinke liye tumhara product, service ya content relevant hai.</p><h3>📌Audience ko samajhna kyun important hai?</h3><ul><li>Audience ki needs samajhna</li><li>Right content create karna</li><li>Better marketing message banana</li><li>Relevant customers tak pahunchna</li></ul><h3>🎯Practice Task</h3><p>Apne chosen product ya service ki target audience define karo.</p><p><b>✅Practice complete karne ke baad "Mark as Complete" par click karo.</b></p>`},
+3:{title:"Social Media Marketing",content:`<h2>📲Lesson 3: Social Media Marketing</h2><p>Social Media Marketing mein Instagram, Facebook aur doosre social platforms ka use karke audience tak reach aur engagement build ki jati hai.</p><h3>📌Important Content</h3><ul><li>Educational Posts</li><li>Reels</li><li>Stories</li><li>Carousels</li><li>Promotional Posts</li></ul><h3>🎯Practice Task</h3><p>Apne chosen topic par ek social media post ka idea likho.</p><p><b>✅Practice complete karne ke baad "Mark as Complete" par click karo.</b></p>`},
+4:{title:"Content & Promotion",content:`<h2>📢Lesson 4: Content & Promotion</h2><p>Digital Marketing mein quality content audience ka attention attract karne aur trust build karne mein help karta hai.</p><h3>📝Content Types</h3><ul><li>Educational Content</li><li>Informational Content</li><li>Engaging Content</li><li>Promotional Content</li></ul><h3>🎯Practice Task</h3><p>Ek product ya service ke liye short promotional post likho aur end mein CTA add karo.</p><p><b>✅Practice complete karne ke baad "Mark as Complete" par click karo.</b></p>`},
+5:{title:"Your First Digital Marketing Project",content:`<h2>🎉Lesson 5: Your First Digital Marketing Project</h2><p>Ab tumne Digital Marketing ke basics, target audience, social media marketing aur promotion ke baare mein seekha.</p><h3>🎯Your Project</h3><p>Kisi ek product ya service ke liye ek simple digital marketing plan banao.</p><ul><li>Product ya service choose karo.</li><li>Target audience define karo.</li><li>Social media post idea banao.</li><li>Promotional caption likho.</li><li>CTA add karo.</li></ul><p><b>✅Practice complete karne ke baad "Mark as Complete" par click karo.</b></p>`}
+};
+
+  const lessonSet = course.includes("Web") ? webLessons : course.includes("Content") ? contentWritingLessons : course.includes("Freelancing") ? freelancingLessons : course.includes("Digital Marketing") ? digitalMarketingLessons : lessons;
+const lesson = lessonSet[number];
+
+  dashboard.innerHTML = `
+    <h2>📖 Lesson ${number}: ${lesson.title}</h2>
+    <div class="card">
+      ${lesson.content}
+    </div>
+    <button onclick="completeLesson(${number}, '${course}')">✅Mark as Complete</button>
+    <button onclick="location.reload()">⬅️ Back to Course</button>
+  `;
+}
+
+function completeLesson(number, course) {
+  if (number < 5) {
+    startLesson(number + 1, course);
+  } else {
+    document.getElementById('dashboard').innerHTML = `
+      <h2>🎉 Course Completed!</h2>
+      <p>Congratulations! Tumne ${course} ke saare lessons complete kar liye. ❤️</p>
+      <button onclick="location.reload()">⬅️ Back to Dashboard</button>
+    `;
+  }
+}
+
+</script>
+
