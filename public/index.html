@@ -9,6 +9,7 @@ header{background:#7065e7;color:white;text-align:center;padding:30px 15px}
 h1,h2{margin:10px}.container{max-width:900px;margin:auto;padding:20px}.card{background:white;padding:22px;margin:18px 0;border-radius:15px;box-shadow:0 3px 12px #ddd}input{box-sizing:border-box;width:90%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px}button{background:#7065e7;color:white;border:0;padding:12px 20px;padding:10px;border-radius:8px;font-size:16px}footer{text-align:center;background:#222;color:white;padding:20px;margin-top:30px}
 #dashboard{display:none}
 </style>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body>
 <header><h1>🌍 HALALWAYS</h1><p>Learning & Earning Platform</p><p>Learn — Practice – Grow</p></header>
@@ -61,7 +62,58 @@ h1,h2{margin:10px}.container{max-width:900px;margin:auto;padding:20px}.card{back
 <button onclick="location.reload()">🚪 Admin Logout</button>
 </div>
 <footer><p>© 2026 HALALWAYS<br>Learning & Earning</p></footer>
-<script>function login(){var n = document.getElementById("name").value; var e = document.getElementById("email").value; if(!n || !e){alert("Please enter your name and email.");return;}document.getElementById("studentName").innerText=n;document.getElementById("name").setAttribute("readonly","true");document.getElementById("dashboard").style.display="block";}function enroll(c){var n=document.getElementById("name").value;if(!n){alert("Please login first.");return;}document.getElementById("myCourse").innerText=c;}function logoutUser() {
+<script>function login(){var n = document.getElementById("name").value; var e = document.getElementById("email").value; if(!n || !e){alert("Please enter your name and email.");return;}document.getElementById("studentName").innerText=n;document.getElementById("name").setAttribute("readonly","true");document.getElementById("dashboard").style.display="block";}async function enroll(c){
+var n=document.getElementById("name").value;
+if(!n){alert("Please login first.");return;}
+
+var prices={
+"Web Development":1000,
+"Graphic Design":1000,
+"Content Writing":500,
+"Freelancing":1000,
+"Digital Marketing":1000,
+"All Courses Bundle":1500
+};
+
+var amount=prices[c] || 500;
+
+try{
+const response=await fetch("https://halalways-api.onrender.com/api/create-order",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({amount:amount})
+});
+
+const data=await response.json();
+
+if(!data.success){
+alert("Payment order create nahi hua.");
+return;
+}
+
+const options={
+key:"rzp_live_TVEHxxxxxxxAFxOTo",
+amount:data.amount,
+currency:"INR",
+name:"HALALWAYS",
+description:c,
+order_id:data.orderId,
+handler:function(response){
+document.getElementById("myCourse").innerText=c;
+alert("✅ Payment Successful!");
+},
+theme:{color:"#3399cc"}
+};
+
+var rzp=new Razorpay(options);
+rzp.open();
+
+}catch(error){
+alert("❌ Payment Error: "+error.message);
+}
+}
+
+function logoutUser() {
   localStorage.clear();
   sessionStorage.clear();
   location.reload();
