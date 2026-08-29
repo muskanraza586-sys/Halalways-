@@ -2,10 +2,15 @@ const cors = require('cors');
 require('dotenv').config();
 
 const express = require('express');
-app.use(cors());
 const Razorpay = require('razorpay');
 
 const app = express();
+app.use(cors({
+  origin: "https://halalways-cd62b.web.app",
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type"]
+}));
+app.options("*", cors());
 app.use(express.json());
 
 const razorpay = new Razorpay({
