@@ -21,6 +21,46 @@ app.get('/api/test', (req, res) => {
   res.json({ success: true, message: 'HALALWAYS Razorpay server working!' });
 });
 
+
+app.post('/api/verify-payment', (req, res) => {
+  try {
+    const crypto = require('crypto');
+
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return res.status(400).json({
+        success: false,
+        error: 'Missing payment details'
+      });
+    }
+
+    const generated_signature = crypto
+      .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
+      .update(razorpay_order_id + '|' + razorpay_payment_id)
+      .digest('hex');
+
+    if (generated_signature !== razorpay_signature) {
+      return res.status(400).json({
+        success: false,
+        error: 'Payment verification failed'
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Payment verified successfully'
+    });
+
+  } catch (error) {
+    console.error('Payment verification error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Unable to verify payment'
+    });
+  }
+});
+
 app.listen(process.env.PORT || 3000, () => {
   console.log('HALALWAYS server running on port 3000');
 });
